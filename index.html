@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Builders Academy — DFW | Kids Learn to Build with AI</title>
+<meta name="description" content="A 6-week hands-on AI course for kids ages 10–17 in Dallas-Fort Worth. Your child builds real projects, ships real code, and walks away with a live portfolio.">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface-raised: #1a1a26;
+    --accent: #00e5a0;
+    --accent-dim: #00c489;
+    --accent-glow: rgba(0, 229, 160, 0.15);
+    --accent-glow-strong: rgba(0, 229, 160, 0.3);
+    --text: #e8e8ed;
+    --text-dim: #9494a8;
+    --text-bright: #ffffff;
+    --orange: #ff6b35;
+    --purple: #a78bfa;
+    --blue: #38bdf8;
+    --pink: #f472b6;
+    --font-display: 'Sora', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-display);
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* --- NOISE OVERLAY --- */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* --- NAV --- */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.25rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(10, 10, 15, 0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .nav-logo {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .nav-logo .bracket { opacity: 0.4; }
+
+  .nav-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.5rem;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-cta:hover {
+    background: var(--text-bright);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 30px rgba(0,229,160,0.25);
+  }
+
+  /* --- HERO --- */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,160,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,160,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 20%, transparent 70%);
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.2;
+    pointer-events: none;
+  }
+
+  .hero-glow-1 { background: var(--accent); top: -10%; right: 10%; }
+  .hero-glow-2 { background: var(--purple); bottom: 10%; left: -5%; opacity: 0.1; }
+
+  .hero-content {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent);
+    background: var(--accent-glow);
+    border: 1px solid rgba(0,229,160,0.15);
+    padding: 0.5rem 1rem;
+    border-radius: 100px;
+    margin-bottom: 2rem;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-tag .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .hero h1 {
+    font-size: clamp(2.8rem, 6.5vw, 5.2rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--text-bright);
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.8s ease 0.1s both;
+  }
+
+  .hero h1 .highlight {
+    background: linear-gradient(135deg, var(--accent) 0%, #38bdf8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: clamp(1.05rem, 2vw, 1.25rem);
+    color: var(--text-dim);
+    max-width: 600px;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+    animation: fadeUp 0.8s ease 0.2s both;
+  }
+
+  .hero-sub strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    animation: fadeUp 0.8s ease 0.3s both;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1rem 2rem;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    letter-spacing: 0.01em;
+  }
+
+  .btn-primary:hover {
+    background: var(--text-bright);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0,229,160,0.3);
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1rem 2rem;
+    background: transparent;
+    color: var(--text);
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1rem;
+    text-decoration: none;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.3s ease;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-glow);
+  }
+
+  /* --- STATS BAR --- */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 16px;
+    overflow: hidden;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    animation: fadeUp 0.8s ease 0.4s both;
+  }
+
+  .stat {
+    padding: 2rem 1.5rem;
+    background: var(--surface);
+    text-align: center;
+  }
+
+  .stat-number {
+    font-family: var(--font-mono);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* --- SECTIONS --- */
+  section {
+    padding: 6rem 2rem;
+  }
+
+  .section-header {
+    max-width: 700px;
+    margin: 0 auto 4rem;
+    text-align: center;
+  }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    color: var(--text-bright);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .section-desc {
+    font-size: 1.05rem;
+    color: var(--text-dim);
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  /* --- NOT THIS / THIS --- */
+  .contrast-section {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .contrast-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .contrast-card {
+    border-radius: 20px;
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contrast-card.not-this {
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .contrast-card.this-one {
+    background: linear-gradient(135deg, rgba(0,229,160,0.08), rgba(56,189,248,0.05));
+    border: 1px solid rgba(0,229,160,0.15);
+  }
+
+  .contrast-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .contrast-card.not-this .contrast-label { color: var(--text-dim); }
+  .contrast-card.this-one .contrast-label { color: var(--accent); }
+
+  .contrast-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .contrast-list li {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .contrast-card.not-this .contrast-list li { color: var(--text-dim); }
+  .contrast-card.this-one .contrast-list li { color: var(--text); }
+
+  .contrast-list .icon {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    margin-top: 2px;
+  }
+
+  .contrast-card.not-this .icon {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-dim);
+  }
+
+  .contrast-card.this-one .icon {
+    background: var(--accent-glow);
+    color: var(--accent);
+  }
+
+  /* --- CURRICULUM WEEKS --- */
+  .curriculum-section {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .week-card {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 2rem;
+    padding: 2rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    position: relative;
+  }
+
+  .week-card:last-child { border-bottom: none; }
+
+  .week-number {
+    font-family: var(--font-mono);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    opacity: 0.25;
+    line-height: 1;
+    text-align: right;
+    padding-top: 0.25rem;
+  }
+
+  .week-content h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  .week-content p {
+    color: var(--text-dim);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+    font-weight: 300;
+  }
+
+  .week-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .week-tag {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 100px;
+    background: var(--surface-raised);
+    color: var(--text-dim);
+    border: 1px solid rgba(255,255,255,0.04);
+    letter-spacing: 0.03em;
+  }
+
+  /* --- TAKE HOME --- */
+  .takehome-grid {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .takehome-card {
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 16px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .takehome-card:hover {
+    border-color: rgba(0,229,160,0.15);
+    transform: translateY(-2px);
+    background: var(--surface-raised);
+  }
+
+  .takehome-icon {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .takehome-card h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  .takehome-card p {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* --- ABOUT / INSTRUCTOR --- */
+  .about-section {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .about-card {
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 20px;
+    padding: 3rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .about-card h3 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-bright);
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+
+  .about-card .subtitle {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+  }
+
+  .about-card p {
+    color: var(--text-dim);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .about-card p + p {
+    margin-top: 1rem;
+  }
+
+  .about-card p strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .cred-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .cred-tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 100px;
+    background: var(--accent-glow);
+    color: var(--accent);
+    border: 1px solid rgba(0,229,160,0.1);
+    letter-spacing: 0.03em;
+  }
+
+  /* --- FAQ --- */
+  .faq-section {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .faq-item {
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding: 1.5rem 0;
+  }
+
+  .faq-q {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 0.6rem;
+    letter-spacing: -0.01em;
+  }
+
+  .faq-a {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* --- CTA SECTION --- */
+  .cta-section {
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    padding: 8rem 2rem;
+  }
+
+  .cta-section .cta-glow {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: var(--accent);
+    filter: blur(150px);
+    opacity: 0.08;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .cta-section h2 {
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    color: var(--text-bright);
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .cta-section p {
+    font-size: 1.1rem;
+    color: var(--text-dim);
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+    position: relative;
+    z-index: 2;
+  }
+
+  .cta-section .btn-primary {
+    font-size: 1.1rem;
+    padding: 1.1rem 2.5rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .spots-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--orange);
+    background: rgba(255,107,53,0.1);
+    border: 1px solid rgba(255,107,53,0.15);
+    padding: 0.5rem 1rem;
+    border-radius: 100px;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .spots-badge .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--orange);
+    animation: pulse 1.5s ease infinite;
+  }
+
+  /* --- FOOTER --- */
+  footer {
+    padding: 3rem 2rem;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.04);
+  }
+
+  footer p {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    font-weight: 300;
+  }
+
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  /* --- ANIMATIONS --- */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(25px);
+    transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* --- RESPONSIVE --- */
+  @media (max-width: 768px) {
+    nav { padding: 1rem; }
+    .nav-cta { padding: 0.6rem 1rem; font-size: 0.8rem; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .contrast-grid { grid-template-columns: 1fr; }
+    .takehome-grid { grid-template-columns: 1fr; }
+    .week-card { grid-template-columns: 50px 1fr; gap: 1rem; }
+    .week-number { font-size: 1.8rem; }
+    .about-card { padding: 2rem; }
+    section { padding: 4rem 1.5rem; }
+    .hero { padding: 7rem 1.5rem 3rem; }
+  }
+
+  @media (max-width: 480px) {
+    .stats-bar { grid-template-columns: 1fr 1fr; }
+    .hero-actions { flex-direction: column; }
+    .hero-actions a { text-align: center; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <span class="bracket">{</span> AI Builders Academy <span class="bracket">}</span>
+  </div>
+  <a href="mailto:tzockoll@gmail.com?subject=AI%20Builders%20Academy%20—%20I'm%20Interested!&body=Hi%20Tom%2C%0A%0AI'm%20interested%20in%20learning%20more%20about%20AI%20Builders%20Academy%20for%20my%20child.%0A%0AChild's%20Name%3A%0AChild's%20Age%3A%0AAny%20prior%20coding%20experience%3F%0A%0AThanks!" class="nav-cta">Get In Touch →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow hero-glow-1"></div>
+  <div class="hero-glow hero-glow-2"></div>
+
+  <div class="hero-content">
+    <div class="hero-tag">
+      <span class="dot"></span>
+      Now enrolling — DFW, Texas
+    </div>
+    <h1>Your kid doesn't just <em>use</em> AI.<br><span class="highlight">They build with it.</span></h1>
+    <p class="hero-sub">
+      A <strong>6-week hands-on course</strong> for ages 10–17 where every session ends with working code, real GitHub repos, and a live portfolio. This isn't "learn to prompt ChatGPT."
+    </p>
+    <div class="hero-actions">
+      <a href="mailto:tzockoll@gmail.com?subject=AI%20Builders%20Academy%20—%20I'm%20Interested!&body=Hi%20Tom%2C%0A%0AI'm%20interested%20in%20learning%20more%20about%20AI%20Builders%20Academy%20for%20my%20child.%0A%0AChild's%20Name%3A%0AChild's%20Age%3A%0AAny%20prior%20coding%20experience%3F%0A%0AThanks!" class="btn-primary">Reserve a Spot →</a>
+      <a href="#curriculum" class="btn-secondary">See the Curriculum ↓</a>
+    </div>
+  </div>
+
+  <div style="height: 4rem;"></div>
+
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-number">6</div>
+      <div class="stat-label">Weeks</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">7–9</div>
+      <div class="stat-label">GitHub Repos</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">1</div>
+      <div class="stat-label">Live Portfolio</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">0</div>
+      <div class="stat-label">Experience Needed</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTRAST SECTION -->
+<section>
+  <div class="contrast-section fade-in">
+    <div class="section-header">
+      <div class="section-label">The Difference</div>
+      <h2 class="section-title">Not another screen-time class</h2>
+    </div>
+
+    <div class="contrast-grid">
+      <div class="contrast-card not-this">
+        <div class="contrast-label">✕ TYPICAL AI COURSES</div>
+        <ul class="contrast-list">
+          <li><span class="icon">—</span>Watch someone demo ChatGPT</li>
+          <li><span class="icon">—</span>Write prompts in a browser window</li>
+          <li><span class="icon">—</span>Talk about AI concepts abstractly</li>
+          <li><span class="icon">—</span>Get a certificate of completion</li>
+          <li><span class="icon">—</span>Nothing tangible to show for it</li>
+        </ul>
+      </div>
+      <div class="contrast-card this-one">
+        <div class="contrast-label">✓ AI BUILDERS ACADEMY</div>
+        <ul class="contrast-list">
+          <li><span class="icon">→</span>Write real code that calls AI APIs</li>
+          <li><span class="icon">→</span>Build & deploy actual applications</li>
+          <li><span class="icon">→</span>Create custom Claude Skills & MCP servers</li>
+          <li><span class="icon">→</span>Ship a desktop automation agent</li>
+          <li><span class="icon">→</span>Walk out with a live portfolio & GitHub history</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CURRICULUM -->
+<section id="curriculum">
+  <div class="curriculum-section">
+    <div class="section-header fade-in">
+      <div class="section-label">The Journey</div>
+      <h2 class="section-title">6 weeks. 6 milestones.<br>Everything ships.</h2>
+      <p class="section-desc">Each week your child builds something real, pushes it to GitHub, and adds it to their growing portfolio. By Demo Day, they have proof — not promises.</p>
+    </div>
+
+    <div class="fade-in">
+      <div class="week-card">
+        <div class="week-number">01</div>
+        <div class="week-content">
+          <h3>Foundation & First Ship</h3>
+          <p>Set up their developer environment, learn Git fundamentals, and build + deploy their personal portfolio website. By Friday, it's live on the internet.</p>
+          <div class="week-tags">
+            <span class="week-tag">GitHub</span>
+            <span class="week-tag">HTML/CSS</span>
+            <span class="week-tag">Portfolio Deploy</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-card">
+        <div class="week-number">02</div>
+        <div class="week-content">
+          <h3>Talking to AI with Code</h3>
+          <p>Learn how AI APIs actually work under the hood. Build their first application that calls Claude's API to do something useful — and push it to GitHub.</p>
+          <div class="week-tags">
+            <span class="week-tag">APIs</span>
+            <span class="week-tag">Python / JS</span>
+            <span class="week-tag">Claude API</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-card">
+        <div class="week-number">03</div>
+        <div class="week-content">
+          <h3>Custom Claude Skills & Plugins</h3>
+          <p>Create custom AI behaviors — Claude Skills and plugins that extend what AI can do. These go straight into their portfolio as real artifacts.</p>
+          <div class="week-tags">
+            <span class="week-tag">Claude Skills</span>
+            <span class="week-tag">Plugins</span>
+            <span class="week-tag">System Prompts</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-card">
+        <div class="week-number">04</div>
+        <div class="week-content">
+          <h3>Build an MCP Server</h3>
+          <p>Design and build a custom MCP (Model Context Protocol) server — the protocol that lets AI connect to real tools and data. This is cutting-edge stuff that most adults haven't touched yet.</p>
+          <div class="week-tags">
+            <span class="week-tag">MCP Protocol</span>
+            <span class="week-tag">Server Architecture</span>
+            <span class="week-tag">Tool Integration</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-card">
+        <div class="week-number">05</div>
+        <div class="week-content">
+          <h3>Desktop AI Agent</h3>
+          <p>Build a desktop automation project using Claude's computer-use agent capabilities. Their AI doesn't just chat — it takes actions and automates real workflows.</p>
+          <div class="week-tags">
+            <span class="week-tag">Claude Agent</span>
+            <span class="week-tag">Automation</span>
+            <span class="week-tag">Desktop App</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-card">
+        <div class="week-number">06</div>
+        <div class="week-content">
+          <h3>Capstone & Demo Day</h3>
+          <p>Design, build, and present an original AI application of their choosing. Parents and friends are invited to Demo Day to see what they've built. Final portfolio polish and GitHub cleanup.</p>
+          <div class="week-tags">
+            <span class="week-tag">Capstone Project</span>
+            <span class="week-tag">Presentation</span>
+            <span class="week-tag">Demo Day</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT THEY TAKE HOME -->
+<section>
+  <div class="section-header fade-in">
+    <div class="section-label">The Proof</div>
+    <h2 class="section-title">What your child walks away with</h2>
+    <p class="section-desc">Not certificates. Not theory. Real, tangible artifacts they own forever.</p>
+  </div>
+
+  <div class="takehome-grid fade-in">
+    <div class="takehome-card">
+      <span class="takehome-icon">📁</span>
+      <h3>7–9 GitHub Repos</h3>
+      <p>Working code in real repositories. Visible to colleges, employers, and anyone who checks their profile.</p>
+    </div>
+    <div class="takehome-card">
+      <span class="takehome-icon">🌐</span>
+      <h3>Live Portfolio Site</h3>
+      <p>A personal website anyone can visit, showcasing every project they've built throughout the course.</p>
+    </div>
+    <div class="takehome-card">
+      <span class="takehome-icon">🤖</span>
+      <h3>Custom AI Artifacts</h3>
+      <p>Claude Skills, Plugins, and an MCP server they designed and built — real AI engineering artifacts.</p>
+    </div>
+    <div class="takehome-card">
+      <span class="takehome-icon">🖥️</span>
+      <h3>Desktop AI Agent</h3>
+      <p>A working automation project that demonstrates they can build AI that takes action, not just answers questions.</p>
+    </div>
+    <div class="takehome-card">
+      <span class="takehome-icon">🎤</span>
+      <h3>Capstone Presentation</h3>
+      <p>An original app they designed and presented at Demo Day — practicing the skill of shipping and storytelling.</p>
+    </div>
+    <div class="takehome-card">
+      <span class="takehome-icon">🧠</span>
+      <h3>Real-World Skills</h3>
+      <p>Git, APIs, deployment, system design, prompt engineering — the same tools used by professionals building AI today.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT INSTRUCTOR -->
+<section>
+  <div class="about-section fade-in">
+    <div class="section-header">
+      <div class="section-label">Your Instructor</div>
+      <h2 class="section-title">Built by a builder</h2>
+    </div>
+
+    <div class="about-card">
+      <div>
+        <h3>Tom Zockoll</h3>
+        <div class="subtitle">Enterprise Software Professional · AI Builder · DFW</div>
+        <p>
+          I'm a senior enterprise software professional who has spent the last two years building production AI applications — not just talking about them. In my work with some of the largest enterprises in the DFW metro, <strong>it's become clear that knowing how to actually build with these tools is a real differentiator.</strong>
+        </p>
+        <p>
+          I got tired of watching kids consume this technology instead of learning to create with it. AI Builders Academy is the course I wish existed for young people — hands-on, real code, real deployments, real proof.
+        </p>
+        <p>
+          Every project in this course mirrors something I've built professionally. Your kid will use the same tools, the same workflows, and the same thinking that drive real AI applications in the enterprise world today.
+        </p>
+        <div class="cred-tags">
+          <span class="cred-tag">8+ Years Enterprise Software</span>
+          <span class="cred-tag">Fortune 500 Accounts</span>
+          <span class="cred-tag">Production AI Builder</span>
+          <span class="cred-tag">Future Founders Initiative</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section>
+  <div class="faq-section fade-in">
+    <div class="section-header">
+      <div class="section-label">Questions</div>
+      <h2 class="section-title">Common questions from parents</h2>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Does my child need coding experience?</div>
+      <div class="faq-a">No. We start from zero and build up. The curriculum is designed so that a complete beginner can follow along and ship real projects by the end of every week. We also offer bespoke curriculums for students with more experience.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What ages is this for?</div>
+      <div class="faq-a">Ages 10–17. The curriculum adapts to different levels — younger students get more scaffolding, older students get more autonomy and deeper challenges.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What equipment do they need?</div>
+      <div class="faq-a">A laptop (Mac or Windows) with internet access. That's it. We'll help them set up everything else in Week 1.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is this in-person or virtual?</div>
+      <div class="faq-a">We're based in the DFW area and offer both options. Reach out and we'll find the format that works best for your family.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What happens after the 6 weeks?</div>
+      <div class="faq-a">Your child keeps everything — their GitHub repos, portfolio site, and all projects are theirs forever. Advanced follow-up programs are also in development for students who want to keep building.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How much does it cost?</div>
+      <div class="faq-a">Founding member pricing is available now. Reach out for current rates — we also offer bespoke curriculums and pricing for families with specific needs.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="cta-section">
+  <div class="cta-glow"></div>
+  <div class="spots-badge">
+    <span class="dot"></span>
+    Only 3 spots remaining this month
+  </div>
+  <h2>Let's build something<br>together.</h2>
+  <p>Send me a message and I'll get back to you within 24 hours.</p>
+  <a href="mailto:tzockoll@gmail.com?subject=AI%20Builders%20Academy%20—%20I'm%20Interested!&body=Hi%20Tom%2C%0A%0AI'm%20interested%20in%20learning%20more%20about%20AI%20Builders%20Academy%20for%20my%20child.%0A%0AChild's%20Name%3A%0AChild's%20Age%3A%0AAny%20prior%20coding%20experience%3F%0A%0AThanks!" class="btn-primary">Reserve a Spot →</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 AI Builders Academy · Dallas–Fort Worth, Texas · <a href="mailto:tzockoll@gmail.com">tzockoll@gmail.com</a></p>
+</footer>
+
+<!-- SCROLL ANIMATIONS -->
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
